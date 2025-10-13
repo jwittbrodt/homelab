@@ -17,6 +17,10 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             just
+            opentofu
+            talosctl
+            kubectl
+            k9s
           ];
         };
         formatter.${system} = pkgs.nixfmt-rfc-style;
