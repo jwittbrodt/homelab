@@ -83,5 +83,15 @@ resource "talos_cluster_kubeconfig" "this" {
   client_configuration = talos_machine_bootstrap.this.client_configuration
   node                 = talos_machine_bootstrap.this.node
   endpoint             = talos_machine_bootstrap.this.node
+
+  lifecycle {
+    replace_triggered_by = [talos_machine_bootstrap.this]
+  }
 }
 
+data "talos_cluster_health" "this" {
+  client_configuration = talos_machine_bootstrap.this.client_configuration
+  control_plane_nodes  = [for num, node in local.nodes : node.ip if node.is_controlplane]
+  worker_nodes         = [for num, node in local.nodes : node.ip if !node.is_controlplane]
+  endpoints            = [for num, node in local.nodes : node.ip if node.is_controlplane]
+}
