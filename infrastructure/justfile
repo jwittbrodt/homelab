@@ -6,3 +6,6 @@ apply:
 
 get-kubeconfig:
     tofu output -raw kubeconfig > ~/.kube/config
+
+get-talosconfig:
+    mkdir -p ~/.config/talos && tofu output -raw talosconfig > ~/.talos/config
