@@ -67,6 +67,16 @@ locals {
     })
   ]
   worker_config_patches = []
+  kubeproxy_strict_arp_for_metallb = yamlencode({
+    cluster = {
+      proxy = {
+        mode = "ipvs"
+        extraArgs = {
+          "ipvs-strict-arp" = true
+        }
+      }
+    }
+  })
 }
 
 resource "talos_machine_configuration_apply" "nodes" {
@@ -85,7 +95,7 @@ resource "talos_machine_configuration_apply" "nodes" {
           hostname = join("-", compact([data.talos_client_configuration.this.cluster_name, each.value.is_controlplane ? "cp" : "", each.key]))
         }
       }
-    })],
+    }), local.kubeproxy_strict_arp_for_metallb],
   each.value.is_controlplane ? local.controlplane_config_patches : local.worker_config_patches)
 }
 
