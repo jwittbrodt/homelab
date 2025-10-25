@@ -20,6 +20,7 @@
             opentofu
             talosctl
             kubectl
+            kustomize
             k9s
           ];
         };
