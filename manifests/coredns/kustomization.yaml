@@ -7,3 +7,5 @@ configMapGenerator:
       - Corefile
 generatorOptions:
   disableNameSuffixHash: true
+resources:
+  - service.yaml

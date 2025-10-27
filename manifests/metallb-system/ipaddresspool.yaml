@@ -1,7 +1,19 @@
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
-  name: first-pool
+  name: default
 spec:
   addresses:
-  - 192.168.178.240-192.168.178.250
+  - 192.168.178.240-192.168.178.249
+  avoidBuggyIPs: true
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: reserved
+spec:
+  addresses:
+  - 192.168.178.250-192.168.178.254
+  avoidBuggyIPs: true
+  autoAssign: false
