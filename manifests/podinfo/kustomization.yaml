@@ -5,3 +5,4 @@ resources:
   - github.com/stefanprodan/podinfo//kustomize
 patches:
   - path: loadbalancer.yaml
+  - path: podsecurity.yaml
