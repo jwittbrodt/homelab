@@ -10,9 +10,10 @@ locals {
     203 = {
       is_controlplane = true
     }
-    204 = {
-      is_controlplane = false
-    }
+    # Worker node removed until needed
+    # 204 = {
+    #   is_controlplane = false
+    # }
   }
 
   nodes = { for hostnum, node in local.node_config : hostnum => merge(node, { "ip" = cidrhost(local.local_subnet, hostnum) }) }
@@ -104,8 +105,12 @@ resource "talos_machine_configuration_apply" "nodes" {
       }
     }), local.kubeproxy_strict_arp_for_metallb],
   each.value.is_controlplane ? local.controlplane_config_patches : local.worker_config_patches)
+  on_destroy = {
+    reset    = true
+    graceful = true
+    reboot   = false
+  }
 }
-
 
 resource "talos_machine_bootstrap" "this" {
   node                 = talos_machine_configuration_apply.nodes[201].node
