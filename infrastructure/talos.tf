@@ -49,6 +49,13 @@ locals {
       cluster = {
         allowSchedulingOnControlPlanes = true
       }
+      machine = {
+        nodeLabels = {
+          "node.kubernetes.io/exclude-from-external-load-balancers" = {
+            "$patch" = "delete"
+          }
+        }
+      }
     }),
     yamlencode({
       machine = {
