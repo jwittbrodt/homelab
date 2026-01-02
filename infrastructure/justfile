@@ -1,11 +1,13 @@
 plan:
-  tofu plan
+    tofu -chdir=nodes plan
+    tofu -chdir=cluster plan
 
 apply:
-  tofu apply
+    tofu -chdir=nodes apply
+    tofu -chdir=cluster apply
 
 get-kubeconfig:
-    tofu output -raw kubeconfig > ~/.kube/config
+    tofu -chdir=nodes output -raw kubeconfig > ~/.kube/config
 
 get-talosconfig:
-    mkdir -p ~/.config/talos && tofu output -raw talosconfig > ~/.talos/config
+    mkdir -p ~/.config/talos && tofu -chdir=nodes output -raw talosconfig > ~/.talos/config
