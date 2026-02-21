@@ -10,10 +10,9 @@ locals {
     203 = {
       is_controlplane = true
     }
-    # Worker node removed until needed
-    # 204 = {
-    #   is_controlplane = false
-    # }
+    204 = {
+      is_controlplane = false
+    }
   }
 
   nodes = { for hostnum, node in local.node_config : hostnum => merge(node, { "ip" = cidrhost(local.local_subnet, hostnum) }) }
@@ -108,7 +107,7 @@ resource "talos_machine_configuration_apply" "nodes" {
   on_destroy = {
     reset    = true
     graceful = true
-    reboot   = false
+    reboot   = true
   }
 }
 
@@ -132,4 +131,9 @@ data "talos_cluster_health" "this" {
   control_plane_nodes  = [for num, node in local.nodes : node.ip if node.is_controlplane]
   worker_nodes         = [for num, node in local.nodes : node.ip if !node.is_controlplane]
   endpoints            = [talos_cluster_kubeconfig.this.endpoint]
+
+  depends_on = [
+    talos_machine_configuration_apply.nodes,
+    talos_machine_bootstrap.this
+  ]
 }
